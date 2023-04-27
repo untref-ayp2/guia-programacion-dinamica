@@ -1,0 +1,80 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: TestCostoCaminoMinimo
+      id: testcostocaminominimo
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: TestCostoCaminoMinimo
+        setup-command: ''
+        command: go test ./... -run ^TestCostoCaminoMinimo$
+        timeout: 10
+        max-score: 1
+    - name: TestEscalera
+      id: testescalera
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: TestEscalera
+        setup-command: ''
+        command: go test ./... -run ^TestEscalera$
+        timeout: 10
+        max-score: 1
+    - name: TestFibonacci
+      id: testfibonacci
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: TestFibonacci
+        setup-command: ''
+        command: go test ./... -run ^TestFibonacci$
+        timeout: 10
+        max-score: 1
+    - name: TestLCS
+      id: testlcs
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: TestLCS
+        setup-command: ''
+        command: go test ./... -run ^TestLCS$
+        timeout: 10
+        max-score: 1
+    - name: TestMochila
+      id: testmochila
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: TestMochila
+        setup-command: ''
+        command: go test ./... -run ^TestMochila$
+        timeout: 10
+        max-score: 1
+    - name: TestSumaSubconjunto
+      id: testsumasubconjunto
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: TestSumaSubconjunto
+        setup-command: ''
+        command: go test ./... -run ^TestSumaSubconjunto$
+        timeout: 10
+        max-score: 1
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        TESTCOSTOCAMINOMINIMO_RESULTS: ${{steps.testcostocaminominimo.outputs.result}}
+        TESTESCALERA_RESULTS: ${{steps.testescalera.outputs.result}}
+        TESTFIBONACCI_RESULTS: ${{steps.testfibonacci.outputs.result}}
+        TESTLCS_RESULTS: ${{steps.testlcs.outputs.result}}
+        TESTMOCHILA_RESULTS: ${{steps.testmochila.outputs.result}}
+        TESTSUMASUBCONJUNTO_RESULTS: ${{steps.testsumasubconjunto.outputs.result}}
+      with:
+        runners: testcostocaminominimo,testescalera,testfibonacci,testlcs,testmochila,testsumasubconjunto
